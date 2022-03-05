@@ -79,6 +79,25 @@ static void cdc_task(void)
 {
   uint8_t itf;
 
+  
+  static uint8_t buffer[4 + 0x210];
+	uint32_t buffsize = 0;
+
+  if (tud_cdc_connected() == true){
+    buffsize = tud_cdc_write_available();
+    printf("CDC_TX buffer level: 0x%x\n", buffsize);
+    if (buffsize < 4 + 0x210){
+      printf("CDC_TX buffer is full\n", buffsize);
+    }else{
+      tud_cdc_write(buffer, sizeof(buffer));
+      tud_cdc_write_flush();
+    }
+
+	}
+
+  
+  
+  /*
   for (itf = 0; itf < CFG_TUD_CDC; itf++)
   {
     // connected() check for DTR bit
@@ -97,4 +116,5 @@ static void cdc_task(void)
       }
     }
   }
+  */
 }
